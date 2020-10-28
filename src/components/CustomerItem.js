@@ -1,10 +1,10 @@
 import React from "react";
 
-export default function CustomerItem(props) {
+export default function CustomerItem(props) { // Can delete this 
   const { id, name, size, time } = props.customer;
 
   function notify() {
-    alert(`${name} has been notified!`);
+    alert(`${name} has been notified!`);   
   }
 
   return (

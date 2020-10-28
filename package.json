@@ -7,10 +7,13 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "@types/shortid": "0.0.29",
+    "material-ui": "^0.20.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.3",
-    "react-table": "^7.5.2"
+    "react-table": "^7.5.2",
+    "shortid": "^2.2.16"
   },
   "scripts": {
     "start": "react-scripts start",
