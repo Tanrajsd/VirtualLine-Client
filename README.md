@@ -2,9 +2,12 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Available Scripts
 
-In the project directory, you can run:
-install dependencies:
+Install Dependencies:
 npm install material-ui
+npm install shortid
+npm install @types/shortid
+
+In the project directory, you can run:
 
 ### `yarn start` or 'npm start'
 
