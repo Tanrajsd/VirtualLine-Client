@@ -2,9 +2,9 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Available Scripts
 
-Install Dependencies:
-npm install material-ui
-npm install shortid
+Install Dependencies: <br />
+npm install material-ui <br />
+npm install shortid <br />
 npm install @types/shortid
 
 In the project directory, you can run:
