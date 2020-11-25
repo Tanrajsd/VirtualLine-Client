@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import MyButton from "./MyButton";
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
+import TimeElapsed from "./TimeElapsed";
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
@@ -10,6 +11,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import {generate} from "shortid"; // need to also install this dependency before running and @types/shortid
 
+
 import {
   useTable,
   useResizeColumns,
@@ -17,31 +19,15 @@ import {
   useRowSelect,
 } from "react-table";
 
-// function contains(a, obj) {
-//   console.log(a);
-//   for (var i = 0; i < 8; i++) {
-//     console.log(a[i]);
-//     console.log(obj);
-//       if (a[i] == obj) {
-//         console.log("its true");
-//           return true;
-//       }
-//   }
-//   return false;
-// }
-
-
 export default function MyTable() {
-  
-  function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
-  }
+    var flag =0;
   
     const [rows,setRows] = useState ([
         {
           name: "Tanraj Dhillon",
           size: "4",
           timeReg: "6:30 p.m.",
+          timeElapsed: 10,
           notified: false,
           id: generate()
         },
@@ -49,6 +35,7 @@ export default function MyTable() {
           name: "Karan Vasdev",
           size: "2",
           timeReg: "5:45 p.m.",
+          timeElapsed: 0,
           notified: false,
           id: generate()
         },
@@ -56,9 +43,11 @@ export default function MyTable() {
           name: "Shubh Mittal",
           size: "3",
           timeReg: "7:45 p.m.",
+          timeElapsed: 3,
           notified: false,
           id: generate()
         }]);
+
 
     const useStyles = makeStyles({
       table: {
@@ -83,15 +72,36 @@ export default function MyTable() {
       }
     });
 
-    function setRowNotified(row) {
-      alert(row.name + " has been notified");
+    function incrementTime(row) {
+      if (!row.name) {
+        return;
+      }
       console.log(row);
       let newRows = [...rows];
-      let index = rows.findIndex(item => item.id == row.id);
+      let index = rows.findIndex(item => item.id === row.id);
       newRows[index] = {
         name: newRows[index].name,
         size: newRows[index].size,
         timeReg: newRows[index].timeReg,
+        timeElapsed: newRows[index].timeElapsed + 1,
+        notified: newRows[index].notified,
+        id: newRows[index].id
+      }
+      console.log("time incremented");
+      setRows (newRows);
+      // setInterval(incrementTime(row),10000);
+    }
+
+    function setRowNotified(row) {
+      alert(row.name + " has been notified");
+      console.log(row);
+      let newRows = [...rows];
+      let index = rows.findIndex(item => item.id === row.id);
+      newRows[index] = {
+        name: newRows[index].name,
+        size: newRows[index].size,
+        timeReg: newRows[index].timeReg,
+        timeElapsed: newRows[index].timeElapsed,
         notified: true,
         id: newRows[index].id
       }
@@ -102,7 +112,7 @@ export default function MyTable() {
   function deleteRow(row) {
     alert(row.name + " has been deleted");
     console.log(row);
-    let newRows = rows.filter(item => item.id != row.id);
+    let newRows = rows.filter(item => item.id !== row.id);
     setRows (newRows);
 }
 
@@ -115,6 +125,7 @@ export default function MyTable() {
             <TableCell align="right">Name</TableCell>
             <TableCell align="right">Size</TableCell>
             <TableCell align="right">Time Registered</TableCell>
+            <TableCell align="right">Time Elapsed</TableCell>
             <TableCell align="right">Notify</TableCell>
           </TableRow>
         </TableHead>
@@ -126,12 +137,12 @@ export default function MyTable() {
               classname = classes.rownotified;
               deleteButton = <MyButton typeNotify = {false} row = {row} Rowfn= {deleteRow} />;
             }
-
             return(
               <TableRow className = {classname} key={row.id}> 
                 <TableCell align="right" component="th" scope="row"> {row.name} </TableCell>
                 <TableCell align="right">{row.size}</TableCell>
                 <TableCell align="right">{row.timeReg}</TableCell>
+                <TableCell align="right"><TimeElapsed/></TableCell>
                 <MyButton typeNotify = {true} row = {row} Rowfn= {setRowNotified} />
                 {deleteButton}
               </TableRow>
