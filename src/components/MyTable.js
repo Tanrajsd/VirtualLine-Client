@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MyButton from "./MyButton";
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -9,6 +9,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import Axios from 'axios';
 import { generate } from "shortid"; // need to also install this dependency before running and @types/shortid
 
 
@@ -21,6 +22,11 @@ import {
 
 export default function MyTable() {
   var flag = 0;
+
+  // useEffect(() => {
+  //   axios.get("http://localhost:5000/api/reservations").then(res => console.log(res)
+  //   )
+  // }
 
   const [rows, setRows] = useState([
     {
@@ -93,6 +99,11 @@ export default function MyTable() {
   }
 
   function setRowNotified(row) {
+    Axios.put("http://localhost:5000/api/reservations", {
+      notified: "true",
+      id: "5fbf3d0fc8808f4ddb43a612"
+    }).then(res => console.log("Notified the user"))
+
     alert(row.name + " has been notified");
     console.log(row);
     let newRows = [...rows];
@@ -105,7 +116,6 @@ export default function MyTable() {
       notified: true,
       id: newRows[index].id
     }
-
     setRows(newRows);
   }
 
