@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MyButton from "./MyButton";
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -10,6 +10,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import {generate} from "shortid"; // need to also install this dependency before running and @types/shortid
+import Axios from 'axios';
 
 
 import {
@@ -21,32 +22,23 @@ import {
 
 export default function MyTable() {
     var flag =0;
-  
-    const [rows,setRows] = useState ([
-        {
-          name: "Tanraj Dhillon",
-          size: "4",
-          timeReg: "6:30 p.m.",
-          timeElapsed: 10,
-          notified: false,
-          id: generate()
-        },
-        {
-          name: "Karan Vasdev",
-          size: "2",
-          timeReg: "5:45 p.m.",
-          timeElapsed: 0,
-          notified: false,
-          id: generate()
-        },
-        {
-          name: "Shubh Mittal",
-          size: "3",
-          timeReg: "7:45 p.m.",
-          timeElapsed: 3,
-          notified: false,
-          id: generate()
-        }]);
+
+    const [rows,setRows] = useState ([]);
+
+    function getReservations() {
+      Axios.get("http://localhost:5000/api/reservations").
+      then((res) => {
+        let data = res.data
+        setRows(data)
+      }).catch(() => {
+        alert("Error loading data")
+      })
+    }
+
+
+    useEffect(() => {
+      getReservations()
+    });
 
 
     const useStyles = makeStyles({
@@ -93,8 +85,12 @@ export default function MyTable() {
     }
 
     function setRowNotified(row) {
-      alert(row.name + " has been notified");
-      console.log(row);
+      Axios.put("http://localhost:5000/api/reservations", {
+        notified: "true",
+        id: row._id
+      }).then(res => console.log("Notified the user"))
+      // alert(row.name + " has been notified");
+      // console.log(row);
       let newRows = [...rows];
       let index = rows.findIndex(item => item.id === row.id);
       newRows[index] = {
@@ -110,10 +106,15 @@ export default function MyTable() {
   }
 
   function deleteRow(row) {
-    alert(row.name + " has been deleted");
-    console.log(row);
-    let newRows = rows.filter(item => item.id !== row.id);
+    Axios.delete("http://localhost:5000/api/reservations", {data: {
+    id: row._id}}).then(() => {
+    })
+    let newRows = rows.filter(item => item.id !== row._id);
     setRows (newRows);
+
+    // let newRows = rows.filter(item => item.id !== row.id);
+    // setRows (newRows);
+    // alert(row.name + " has been deleted")
 }
 
   const classes = useStyles();
