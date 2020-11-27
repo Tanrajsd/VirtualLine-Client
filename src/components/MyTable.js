@@ -101,7 +101,6 @@ export default function MyTable() {
         notified: true,
         id: newRows[index].id
       }
-
       setRows (newRows);
   }
 
