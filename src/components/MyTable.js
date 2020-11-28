@@ -9,68 +9,18 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import {generate} from "shortid"; // need to also install this dependency before running and @types/shortid
+import { generate } from "shortid"; // need to also install this dependency before running and @types/shortid
 import Axios from 'axios';
 
 
-import {
-  useTable,
-  useResizeColumns,
-  useFlexLayout,
-  useRowSelect,
-} from "react-table";
+// import {
+//   useTable,
+//   useResizeColumns,
+//   useFlexLayout,
+//   useRowSelect,
+// } from "react-table";
 
 export default function MyTable() {
-    var flag =0;
-
-    const [rows,setRows] = useState ([]);
-
-    function getReservations() {
-      Axios.get("http://localhost:5000/api/reservations").
-      then((res) => {
-        let data = res.data
-        setRows(data)
-      }).catch(() => {
-        alert("Error loading data")
-      })
-    }
-
-
-    useEffect(() => {
-      getReservations()
-    });
-
-  // useEffect(() => {
-  //   axios.get("http://localhost:5000/api/reservations").then(res => console.log(res)
-  //   )
-  // }
-
-  const [rows, setRows] = useState([
-    {
-      name: "Tanraj Dhillon",
-      size: "4",
-      timeReg: "6:30 p.m.",
-      timeElapsed: 10,
-      notified: false,
-      id: generate()
-    },
-    {
-      name: "Karan Vasdev",
-      size: "2",
-      timeReg: "5:45 p.m.",
-      timeElapsed: 0,
-      notified: false,
-      id: generate()
-    },
-    {
-      name: "Shubh Mittal",
-      size: "3",
-      timeReg: "7:45 p.m.",
-      timeElapsed: 3,
-      notified: false,
-      id: generate()
-    }]);
-
 
   const useStyles = makeStyles({
     table: {
@@ -95,6 +45,23 @@ export default function MyTable() {
     }
   });
 
+  const [rows, setRows] = useState([]);
+
+  function getReservations() {
+    Axios.get("http://localhost:5000/api/reservations").
+      then((res) => {
+        let data = res.data
+        setRows(data)
+      }).catch(() => {
+        alert("Error loading data")
+      })
+  }
+
+  useEffect(() => {
+    getReservations()
+  });
+
+
   function incrementTime(row) {
     if (!row.name) {
       return;
@@ -115,37 +82,36 @@ export default function MyTable() {
     // setInterval(incrementTime(row),10000);
   }
 
-    function setRowNotified(row) {
-      Axios.put("http://localhost:5000/api/reservations", {
-        notified: "true",
-        id: row._id
-      }).then(res => console.log("Notified the user"))
-      // alert(row.name + " has been notified");
-      // console.log(row);
-      let newRows = [...rows];
-      let index = rows.findIndex(item => item.id === row.id);
-      newRows[index] = {
-        name: newRows[index].name,
-        size: newRows[index].size,
-        timeReg: newRows[index].timeReg,
-        timeElapsed: newRows[index].timeElapsed,
-        notified: true,
-        id: newRows[index].id
-      }
-      setRows (newRows);
+  function setRowNotified(row) {
+    alert(row.name + " has been notified")
+
+    Axios.put("http://localhost:5000/api/reservations", {
+      notified: "true",
+      id: row._id
+    }).then(res => console.log("Notified the user"))
+    let newRows = [...rows];
+    let index = rows.findIndex(item => item.id === row.id);
+    newRows[index] = {
+      name: newRows[index].name,
+      size: newRows[index].size,
+      timeReg: newRows[index].timeReg,
+      timeElapsed: newRows[index].timeElapsed,
+      notified: true,
+      id: newRows[index].id
+    }
+    setRows(newRows);
   }
 
   function deleteRow(row) {
-    Axios.delete("http://localhost:5000/api/reservations", {data: {
-    id: row._id}}).then(() => {
+    Axios.delete("http://localhost:5000/api/reservations", {
+      data: {
+        id: row._id
+      }
+    }).then(() => {
     })
     let newRows = rows.filter(item => item.id !== row._id);
-    setRows (newRows);
-
-    // let newRows = rows.filter(item => item.id !== row.id);
-    // setRows (newRows);
-    // alert(row.name + " has been deleted")
-}
+    setRows(newRows);
+  }
 
   const classes = useStyles();
   return (
@@ -172,8 +138,8 @@ export default function MyTable() {
               <TableRow className={classname} key={row.id}>
                 <TableCell align="right" component="th" scope="row"> {row.name} </TableCell>
                 <TableCell align="right">{row.size}</TableCell>
-                <TableCell align="right">{row.timeReg}</TableCell>
-                <TableCell align="right"><TimeElapsed /></TableCell>
+                <TableCell align="right">{row.time}</TableCell>
+                <TableCell align="right"><TimeElapsed row={row} /></TableCell>
                 <MyButton typeNotify={true} row={row} Rowfn={setRowNotified} />
                 {deleteButton}
               </TableRow>
